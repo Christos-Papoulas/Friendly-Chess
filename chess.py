@@ -10,69 +10,78 @@ import copy
 
 def main():
     """ Main of the project. """
-    M = 4
-    N = 4
-    pawns = ['N', 'N', 'N', 'N', 'R', 'R']
+    # M = 4
+    # N = 4
+    # pieces = ['N', 'N', 'N', 'N', 'R', 'R']
+
+    # M = 3
+    # N = 3
+    # pieces = ['K', 'K', 'R']
+
+    M = 3
+    N = 3
+    pieces = ['K', 'B', 'N']
     free_board = Board(M, N)
     solutions = []
 
     start = time.time()
     print("starting")
-    find_solutions(free_board, pawns, M, N, solutions, 0)
+    find_solutions(free_board, pieces, solutions, 0)
     end = time.time()
     print("finished")
     print("execution time: %.5f secs" % (end - start))
 
-    print("Found %d solutions: " % (len(solutions)))
-    for s in solutions:
-        print(s)
-        print("\n")
+    print_solutions(solutions)
     return
 
 
-def find_solutions(board, pawns, M, N, solutions, num):
+def find_solutions(board, pieces, solutions, num):
     """ Find the boards. """
-    # print(board)
-    # print("called with pawns: ")
-    # print(pawns)
-    # print("recursion: %d" % (num))
-    # raw_input('continue:')
-
-    if len(pawns) == 0:
+    if len(pieces) == 0:
+        print("found a solution")
         solutions.append(board)
-        return True
+        rotated_brds = board.rotated_boards()
+        for a_board in rotated_brds:
+            if a_board not in solutions:
+                solutions.append(a_board)
+        return
 
-    pi = 0
-    for p in pawns:
-        pi += 1  # count tried pawns
-
-        pawns_new = pawns[:]
-        pawns_new.remove(p)  # remove the candidate
+    for piece in pieces:
+        pieces_new = pieces[:]
+        pieces_new.remove(piece)  # remove the candidate
 
         secure_pos = board.get_secure_positions()
         if len(secure_pos) == 0:
             return
 
-        for s in secure_pos:
-            tx, ty = s
-            if board.is_pawn_threats_others(p, tx, ty) is True:
+        for s_p in secure_pos:
+            t_x, t_y = s_p
+            if board.is_pawn_threats_others(piece, t_x, t_y) is True:
                 continue
-            if is_already_tried(p, tx, ty, solutions) is True:
+            if is_already_tried(piece, t_x, t_y, solutions) is True:
                 continue
 
-            b = copy.deepcopy(board)
-            b.set_pawn_in(p, tx, ty)
-            b.calculate_threats()
-            res = find_solutions(b, pawns_new, M, N, solutions, num + 1)
-    return False
+            new_board = copy.deepcopy(board)
+            new_board.set_pawn_in(piece, t_x, t_y)
+            new_board.calculate_threats()
+            find_solutions(new_board, pieces_new, solutions, num + 1)
+    return
 
 
-def is_already_tried(p, tx, ty, solutions):
+def is_already_tried(piece, x_pos, y_pos, solutions):
     """ Check in the solutions if this position is tried and accepted. """
-    for s in solutions:
-        if s.board[tx][ty] == p:
+    for sol in solutions:
+        if sol.board[x_pos][y_pos] == piece:
             return True
     return False
+
+
+def print_solutions(solutions):
+    """ Iterate solutions and print them. """
+    print("Found %d solutions: " % (len(solutions)))
+    for sol in solutions:
+        print(sol)
+        print("\n")
 
 if __name__ == '__main__':
     main()
