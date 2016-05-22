@@ -26,7 +26,9 @@ class find_solutions_tests(unittest.TestCase):
         solutions = []
         self.assertRaises(Exception, chess.find_solutions(
             board, pieces, solutions, 0))
-        self.assertNotEqual(len(solutions), 0)
+        self.assertEqual(len(solutions), 4)
+        
+        print("\n")
         for sol in solutions:
             print(str(sol) + "\n")
 
@@ -38,7 +40,7 @@ class find_solutions_tests(unittest.TestCase):
         solutions = []
         self.assertRaises(Exception, chess.find_solutions(
             board, pieces, solutions, 0))
-        self.assertNotEqual(len(solutions), 0)
+        self.assertEqual(len(solutions), 8)
 
 
 def main():

@@ -6,22 +6,18 @@ from __future__ import absolute_import
 from friendly_chess.board import Board
 import time
 import copy
+import ConfigParser
 
 
 def main():
     """ Main of the project. """
-    # M = 4
-    # N = 4
-    # pieces = ['N', 'N', 'N', 'N', 'R', 'R']
+    configParser = ConfigParser.RawConfigParser()
+    configFilePath = r'chess.cfg'
+    configParser.read(configFilePath)
 
-    # M = 3
-    # N = 3
-    # pieces = ['K', 'K', 'R']
-
-    M = 3
-    N = 3
-    pieces = ['K', 'B', 'N']
-    free_board = Board(M, N)
+    size = configParser.getint('chess', 'size')
+    pieces = configParser.get('chess', 'pieces').strip().split(' ')
+    free_board = Board(size, size)
     solutions = []
 
     start = time.time()
@@ -38,7 +34,6 @@ def main():
 def find_solutions(board, pieces, solutions, num):
     """ Find the boards. """
     if len(pieces) == 0:
-        print("found a solution")
         solutions.append(board)
         rotated_brds = board.rotated_boards()
         for a_board in rotated_brds:
