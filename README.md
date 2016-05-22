@@ -10,12 +10,4 @@ The friendly chess can be configured with:
 size = 3
 pieces = K K R
 ```
-accepted pieces: 
-
-| *Shortcut* | *What is* |
-| --- | ------------ |
-| K | King |
-| Q | Queen |
-| B | Bishop |
-| R | Rook |
-| N | Knight |
+accepted pieces: K, Q, B, R, N, 
