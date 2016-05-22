@@ -11,7 +11,8 @@ size = 3
 pieces = K K R
 ```
 accepted pieces: 
-| Shortcut | What is |
+
+| *Shortcut* | *What is* |
 | --- | ------------ |
 | K | King |
 | Q | Queen |
