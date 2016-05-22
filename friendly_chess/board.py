@@ -26,6 +26,7 @@ class Board(object):
 
     def set_pawn_in(self, pawn, x_pos, y_pos):
         """ Set the pawn in position x_pos, y_pos. """
+        assert self.board[x_pos][y_pos] == ' '
         self.board[x_pos][y_pos] = pawn
 
     def get_secure_positions(self):
@@ -90,18 +91,35 @@ class Board(object):
         return
 
     def calculate_threats_for_queen(self, x, y):
-        """ Add the threads to the board. """
-        assert True, "Not implemented"
+        """ Add the threads to the board for the queen. """
+        self.calculate_threats_for_bishop(x, y)
+        self.calculate_threats_for_rook(x, y)
         return
 
     def calculate_threats_for_bishop(self, x, y):
-        """ Add the threads to the board. """
-        assert True, "Not implemented"
+        """ Add the threads to the board for the bishop. """
+        dx = [-1, -1, 1, 1]
+        dy = [-1, 1, -1, 1]
+        b_threats = zip(dx, dy)
+        for bt in b_threats:
+            for step in range(1, self.sizeX):
+                px = x + bt[0] * step
+                py = y + bt[1] * step
+                if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
+                    self.set_position_as_thread(px, py)
         return
 
     def calculate_threats_for_knight(self, x, y):
-        """ Add the threads to the board. """
-        assert True, "Not implemented"
+        """ Add the threads to the board for the knight. """
+        dx = [-2, -2, -1, 1, 2, 2, 1, -1]
+        dy = [-1, 1, 2, 2, -1, 1, -2, -2]
+        k_threats = zip(dx, dy)
+        for t in k_threats:
+            tx, ty = t
+            px = x + tx
+            py = y + ty
+            if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
+                self.set_position_as_thread(px, py)
         return
 
     def check_threats_for_king(self, x, y):
@@ -130,15 +148,35 @@ class Board(object):
 
     def check_threats_for_queen(self, x, y):
         """ Return true if threat other pawns. """
-        assert True, "Not implemented"
-        return
+        return self.check_threats_for_rook(
+            x, y) or self.check_threats_for_bishop(
+            x, y)
 
     def check_threats_for_bishop(self, x, y):
         """ Return true if threat other pawns. """
-        assert True, "Not implemented"
-        return
+        dx = [-1, -1, 1, 1]
+        dy = [-1, 1, -1, 1]
+        b_threats = zip(dx, dy)
+        for bt in b_threats:
+            for step in range(1, self.sizeX):
+                px = x + bt[0] * step
+                py = y + bt[1] * step
+                if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
+                    if self.board[px][px] != ' ' and self.board[
+                            px][px] != THREAT:
+                        return True
+        return False
 
     def check_threats_for_knight(self, x, y):
         """ Return true if threat other pawns. """
-        assert True, "Not implemented"
-        return
+        dx = [-2, -2, -1, 1, 2, 2, 1, -1]
+        dy = [-1, 1, 2, 2, -1, 1, -2, -2]
+        k_threats = zip(dx, dy)
+        for t in k_threats:
+            tx, ty = t
+            px = x + tx
+            py = y + ty
+            if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
+                if self.board[px][px] != ' ' and self.board[px][px] != THREAT:
+                    return True
+        return False
