@@ -6,7 +6,7 @@ THREAT = 'T'
 
 
 class Board(object):
-    """ The board of chess. """
+    """ The board of chess and the logic of threating pieces. """
 
     def __init__(self, M, N, data=None):
         """ Initiaze the board. """
@@ -19,8 +19,9 @@ class Board(object):
 
     def __str__(self):
         """ Print the Board. """
-        return '\n'.join(
-            ['|'.join(['{:4}'.format(i) for i in row]) for row in self.board])
+        return '\n'.join(['|'.join(
+            ['{:4}'.format(i) if i != THREAT else '{:4}'.format(
+                ' ') for i in row]) for row in self.board])
 
     def __eq__(self, other):
         """ Override the default Equals operator. """
@@ -42,7 +43,7 @@ class Board(object):
 
     def set_pawn_in(self, pawn, x_pos, y_pos):
         """ Set the pawn in position x_pos, y_pos. """
-        assert self.board[x_pos][y_pos] == ' '
+        # assert self.board[x_pos][y_pos] == ' '
         self.board[x_pos][y_pos] = pawn
 
     def get_secure_positions(self):
@@ -117,12 +118,12 @@ class Board(object):
         dx_threats = [-1, -1, 1, 1]
         dy_threats = [-1, 1, -1, 1]
         b_threats = zip(dx_threats, dy_threats)
-        for bt in b_threats:
+        for b_t in b_threats:
             for step in range(1, self.sizeX):
-                px = x_pos + bt[0] * step
-                py = y_pos + bt[1] * step
-                if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
-                    self.set_position_as_thread(px, py)
+                p_x = x_pos + b_t[0] * step
+                p_y = y_pos + b_t[1] * step
+                if p_x >= 0 and p_x < self.sizeX and p_y >= 0 and p_y < self.sizeY:
+                    self.set_position_as_thread(p_x, p_y)
         return
 
     def calculate_threats_for_knight(self, x_pos, y_pos):
@@ -149,14 +150,14 @@ class Board(object):
                             return True
         return False
 
-    def check_threats_for_rook(self, x, y):
+    def check_threats_for_rook(self, x_pos, y_pos):
         """ Return true if threat other pieces. """
         for i in range(0, self.sizeX):
-            if self.board[i][y] != ' ' and self.board[i][y] != THREAT:
+            if self.board[i][y_pos] != ' ' and self.board[i][y_pos] != THREAT:
                 return True
 
         for j in range(0, self.sizeY):
-            if self.board[x][j] != ' ' and self.board[x][j] != THREAT:
+            if self.board[x_pos][j] != ' ' and self.board[x_pos][j] != THREAT:
                 return True
         return False
 
@@ -207,3 +208,15 @@ class Board(object):
         new_board260.change_board(zip(*new_board180.board[::-1]))
 
         return [new_board90, new_board180, new_board260]
+
+    def get_pieces_and_positions(self):
+        """ Return a list with the pieces and its positions. """
+        pieces = []
+        for i in range(self.sizeX):
+            for j in range(self.sizeY):
+                piece = self.board[i][j]
+                if piece == ' ' or piece == 'T':
+                    continue
+                a_piece = {'p': piece, 'x': i, 'y': j}
+                pieces.append(a_piece)
+        return pieces
