@@ -25,12 +25,10 @@ class find_solutions_tests(unittest.TestCase):
         pieces = ['K', 'K', 'R']
         solutions = []
         self.assertRaises(Exception, chess.find_solutions(
-            board, pieces, solutions, 0))
+            board, pieces, solutions))
         self.assertEqual(len(solutions), 4)
         
-        print("\n")
-        for sol in solutions:
-            print(str(sol) + "\n")
+        chess.print_solutions(solutions)
 
     def test_find_solutions_for4N2R(self):
         M = 4
@@ -39,8 +37,9 @@ class find_solutions_tests(unittest.TestCase):
         board = Board(4, 4)
         solutions = []
         self.assertRaises(Exception, chess.find_solutions(
-            board, pieces, solutions, 0))
+            board, pieces, solutions))
         self.assertEqual(len(solutions), 8)
+        chess.print_solutions(solutions)
 
 
 def main():

@@ -1,8 +1,5 @@
 """ The board of chess. """
 
-import copy
-from itertools import islice
-
 THREAT = 'T'
 
 
@@ -20,9 +17,9 @@ class Board(object):
 
     def __str__(self):
         """ Print the Board. """
-        def outer_join(sep, ss):
+        def outer_join(sep, piece):
             """ Like join but enclose the result with outer separators. """
-            return "%s%s%s" % (sep, sep.join(ss), sep)
+            return "%s%s%s" % (sep, sep.join(piece), sep)
         print_board = ""
         divider = outer_join("+", "-" * self.sizeX) + "\n"
         print_board += divider
@@ -84,17 +81,19 @@ class Board(object):
                 elif self.board[x_pos][y_pos] == 'N':
                     self.calculate_threats_for_knight(x_pos, y_pos)
 
-    def is_pawn_threats_others(self, pawn, x_pos, y_pos):
-        """ Return True if the pawn in x, y threats any one else. """
-        if pawn == 'K':
+    def is_pawn_threats_others(self, piece, x_pos, y_pos):
+        """
+        Return True if the piece in x, y threats any one else.
+        """
+        if piece == 'K':
             return self.check_threats_for_king(x_pos, y_pos)
-        elif pawn == 'Q':
+        elif piece == 'Q':
             return self.check_threats_for_queen(x_pos, y_pos)
-        elif pawn == 'B':
+        elif piece == 'B':
             return self.check_threats_for_bishop(x_pos, y_pos)
-        elif pawn == 'R':
+        elif piece == 'R':
             return self.check_threats_for_rook(x_pos, y_pos)
-        elif pawn == 'N':
+        elif piece == 'N':
             return self.check_threats_for_knight(x_pos, y_pos)
         assert True, "Unknown issue in is_pawn_threats_others"
 

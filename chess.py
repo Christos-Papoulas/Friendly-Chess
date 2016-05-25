@@ -8,13 +8,13 @@ import time
 import copy
 import sys
 import ConfigParser
-#import pdb
 
 from friendly_chess.board import Board
 
 
 def main():
     """ Main of the project. """
+    # read and check values
     config_parser = ConfigParser.RawConfigParser()
     config_filepath = r'chess.cfg'
     config_parser.read(config_filepath)
@@ -35,10 +35,11 @@ def main():
             (len(pieces), size, size))
         return
 
+    # try to find solutions
     print("starting")
 
     start = time.time()
-    find_solutions(free_board, pieces, solutions, 0)
+    find_solutions(free_board, pieces, solutions)
     end = time.time()
 
     print("finished")
@@ -48,14 +49,15 @@ def main():
     return
 
 
-def find_solutions(board, pieces, solutions, num):
-    """ Find the boards. """
+def find_solutions(board, pieces, solutions):
+    """ Find the solution'boards. """
     if len(pieces) == 0:
-        solutions.append(board)
+        if board not in solutions:
+            solutions.append(board)
         rotated_brds = board.rotated_boards()
-        for a_board in rotated_brds:
-            if a_board not in solutions:
-                solutions.append(a_board)
+        for ro_board in rotated_brds:
+            if ro_board not in solutions:
+                solutions.append(ro_board)
         return
 
     for piece in pieces:
@@ -78,17 +80,13 @@ def find_solutions(board, pieces, solutions, num):
                 continue
 
             new_board.calculate_threats()
-            find_solutions(new_board, pieces_new, solutions, num + 1)
+            find_solutions(new_board, pieces_new, solutions)
     return
 
 
 def is_already_tried(board, solutions):
     """ Check in the solutions if this solution is tried and accepted. """
-    # for sol in solutions:
-    #     if sol.board[x_pos][y_pos] == piece:
-    #         return True
     current_pieces = board.get_pieces_and_positions()
-    # pdb.set_trace()
 
     for sol in solutions:
         matches = 0
@@ -100,7 +98,6 @@ def is_already_tried(board, solutions):
                 matches += 1
         if matches == len(current_pieces):
             return True
-    # pdb.set_trace()
     return False
 
 
@@ -125,7 +122,6 @@ def print_solutions(solutions):
     print("Found %d solutions: " % (len(solutions)))
     for sol in solutions:
         print(sol)
-        print("\n")
 
 if __name__ == '__main__':
     main()
