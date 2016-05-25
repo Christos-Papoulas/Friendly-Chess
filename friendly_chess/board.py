@@ -1,6 +1,7 @@
 """ The board of chess. """
 
 import copy
+from itertools import islice
 
 THREAT = 'T'
 
@@ -19,15 +20,26 @@ class Board(object):
 
     def __str__(self):
         """ Print the Board. """
-        return '\n'.join(['|'.join(
-            ['{:4}'.format(i) if i != THREAT else '{:4}'.format(
-                ' ') for i in row]) for row in self.board])
+        def outer_join(sep, ss):
+            """ Like join but enclose the result with outer separators. """
+            return "%s%s%s" % (sep, sep.join(ss), sep)
+        print_board = ""
+        divider = outer_join("+", "-" * self.sizeX) + "\n"
+        print_board += divider
+        for row in range(self.sizeX):
+            print_board += outer_join(
+                "|", [' ' if i == 'T' else i for i in self.board[row]]) + "\n"
+            print_board += divider
+        return print_board
 
     def __eq__(self, other):
         """ Override the default Equals operator. """
         if isinstance(other, self.__class__):
-            return self.__dict__ == other.__dict__
-        return False
+            for x in range(self.sizeX):
+                for y in range(self.sizeY):
+                    if self.board[x][y] != other.board[x][y]:
+                        return False
+        return True
 
     def __ne__(self, other):
         """ Override the default non-equality operator. """
@@ -198,10 +210,11 @@ class Board(object):
         return False
 
     def rotated_boards(self):
-        """ Return 3 new Boards rotated by 90, 180, 260 """
-        new_board90 = copy.deepcopy(self)
-        new_board180 = copy.deepcopy(self)
-        new_board260 = copy.deepcopy(self)
+        """ Return the rotated and symmetry boards. """
+        # rotated boards
+        new_board90 = Board(self.sizeX, self.sizeY)
+        new_board180 = Board(self.sizeX, self.sizeY)
+        new_board260 = Board(self.sizeX, self.sizeY)
 
         new_board90.change_board(zip(*self.board[::-1]))  # rotate
         new_board180.change_board(zip(*new_board90.board[::-1]))
