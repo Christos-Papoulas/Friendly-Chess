@@ -41,6 +41,17 @@ class find_solutions_tests(unittest.TestCase):
         self.assertEqual(len(solutions), 8)
         chess.print_solutions(solutions)
 
+class is_already_tried_test(unittest.TestCase):
+    def test_equal(self):
+        board1 = Board(3, 3)
+        board1.set_pawn_in('N', 1, 0)
+        board2 = Board(3, 3)
+        board2.set_pawn_in('N', 1, 0)
+
+        self.assertEqual(board1, board2)
+        board2.set_pawn_in('N', 2, 0)
+        self.assertNotEqual(board1, board2)
+
 
 def main():
     unittest.main()

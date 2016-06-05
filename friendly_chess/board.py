@@ -31,12 +31,8 @@ class Board(object):
 
     def __eq__(self, other):
         """ Override the default Equals operator. """
-        if isinstance(other, self.__class__):
-            for x in range(self.sizeX):
-                for y in range(self.sizeY):
-                    if self.board[x][y] != other.board[x][y]:
-                        return False
-        return True
+        return (isinstance(other, self.__class__)
+                and self.__dict__ == other.__dict__)
 
     def __ne__(self, other):
         """ Override the default non-equality operator. """
@@ -210,16 +206,27 @@ class Board(object):
 
     def rotated_boards(self):
         """ Return the rotated and symmetry boards. """
+        def transform_to_list(board):
+            """ Get a board and change tuples to lists. """
+            itr = 0
+            for b in board:
+                board[itr] = list(b)
+                itr += 1
+            return board
         # rotated boards
         new_board90 = Board(self.sizeX, self.sizeY)
         new_board180 = Board(self.sizeX, self.sizeY)
         new_board260 = Board(self.sizeX, self.sizeY)
 
-        new_board90.change_board(zip(*self.board[::-1]))  # rotate
-        new_board180.change_board(zip(*new_board90.board[::-1]))
-        new_board260.change_board(zip(*new_board180.board[::-1]))
+        new_board90.change_board(transform_to_list(
+            zip(*self.board[::-1])))  # rotate
+        new_board180.change_board(
+            transform_to_list(zip(*new_board90.board[::-1])))
+        new_board260.change_board(
+            transform_to_list(zip(*new_board180.board[::-1])))
 
         return [new_board90, new_board180, new_board260]
+
 
     def get_pieces_and_positions(self):
         """ Return a list with the pieces and its positions. """

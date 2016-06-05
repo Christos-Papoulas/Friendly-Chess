@@ -75,29 +75,19 @@ def find_solutions(board, pieces, solutions):
 
             new_board = copy.deepcopy(board)
             new_board.set_pawn_in(piece, t_x, t_y)  # set piece
+            new_board.calculate_threats()
             if is_already_tried(new_board, solutions) is True:
                 new_board.set_pawn_in(' ', t_x, t_y)  # unset piece
                 continue
 
-            new_board.calculate_threats()
             find_solutions(new_board, pieces_new, solutions)
     return
 
 
 def is_already_tried(board, solutions):
     """ Check in the solutions if this solution is tried and accepted. """
-    current_pieces = board.get_pieces_and_positions()
-
-    for sol in solutions:
-        matches = 0
-        for piece_pos in current_pieces:
-            piece = piece_pos['p']
-            p_x = piece_pos['x']
-            p_y = piece_pos['y']
-            if sol.board[p_x][p_y] == piece:
-                matches += 1
-        if matches == len(current_pieces):
-            return True
+    if board in solutions:
+        return True
     return False
 
 
@@ -109,8 +99,9 @@ def check_pieces(pieces):
     accepted_pieces = ['K', 'Q', 'B', 'R', 'N']
     for piece in pieces:
         if piece not in accepted_pieces:
-            mes = "%s not in accepted values, try one of the following %s seperated by whitespace.\n" % (
-                piece, accepted_pieces)
+            mes = "%s not in accepted values, try one of the following " \
+                "%s seperated by whitespace.\n" % (
+                    piece, accepted_pieces)
             sys.stderr.write(mes)
             sys.exit()
     pieces.sort(key=Counter(pieces).get, reverse=True)
