@@ -10,6 +10,7 @@ import sys
 import ConfigParser
 
 from friendly_chess.board import Board
+from friendly_chess.pawn import King, Queen, Bishop, Knight, Rook
 
 
 def main():
@@ -26,7 +27,7 @@ def main():
         return
     pieces = check_pieces(
         config_parser.get('chess', 'pieces').strip().split(' '))
-    free_board = Board(size, size)
+    free_board = Board(size)
     solutions = []
 
     if size * size < len(pieces):
@@ -70,25 +71,19 @@ def find_solutions(board, pieces, solutions):
 
         for s_p in secure_pos:
             t_x, t_y = s_p
-            if board.is_pawn_threats_others(piece, t_x, t_y) is True:
+            if piece.check_threats(board, t_x, t_y) is True:
                 continue
 
             new_board = copy.deepcopy(board)
             new_board.set_pawn_in(piece, t_x, t_y)  # set piece
             new_board.calculate_threats()
-            if is_already_tried(new_board, solutions) is True:
+            if new_board.board in solutions:  # is already tried
                 new_board.set_pawn_in(' ', t_x, t_y)  # unset piece
                 continue
 
             find_solutions(new_board, pieces_new, solutions)
+
     return
-
-
-def is_already_tried(board, solutions):
-    """ Check in the solutions if this solution is tried and accepted. """
-    if board in solutions:
-        return True
-    return False
 
 
 def check_pieces(pieces):
@@ -105,7 +100,19 @@ def check_pieces(pieces):
             sys.stderr.write(mes)
             sys.exit()
     pieces.sort(key=Counter(pieces).get, reverse=True)
-    return pieces
+    class_pieces = []
+    for piece in pieces:
+        if piece == 'K':
+            class_pieces.append(King())
+        elif piece == 'Q':
+            class_pieces.append(Queen())
+        elif piece == 'B':
+            class_pieces.append(Bishop())
+        elif piece == 'R':
+            class_pieces.append(Rook())
+        elif piece == 'N':
+            class_pieces.append(Knight())
+    return class_pieces
 
 
 def print_solutions(solutions):

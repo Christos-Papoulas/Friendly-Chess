@@ -1,19 +1,19 @@
 """ The board of chess. """
 
 THREAT = 'T'
+import pdb
 
 
 class Board(object):
     """ The board of chess and the logic of threating pieces. """
 
-    def __init__(self, M, N, data=None):
+    def __init__(self, size, data=None):
         """ Initiaze the board. """
         if data is None:
-            self.board = [[" " for _ in range(N)] for _ in range(M)]
+            self.board = [[" " for _ in range(size)] for _ in range(size)]
         else:
             self.board = data
-        self.sizeX = M
-        self.sizeY = N
+        self.size = size
 
     def __str__(self):
         """ Print the Board. """
@@ -21,11 +21,12 @@ class Board(object):
             """ Like join but enclose the result with outer separators. """
             return "%s%s%s" % (sep, sep.join(piece), sep)
         print_board = ""
-        divider = outer_join("+", "-" * self.sizeX) + "\n"
+        divider = outer_join("+", "-" * self.size) + "\n"
         print_board += divider
-        for row in range(self.sizeX):
+        for row in range(self.size):
             print_board += outer_join(
-                "|", [' ' if i == 'T' else i for i in self.board[row]]) + "\n"
+                "|", [' ' if i == 'T' else str(i) for i in self.board[
+                    row]]) + "\n"
             print_board += divider
         return print_board
 
@@ -48,7 +49,6 @@ class Board(object):
 
     def set_pawn_in(self, pawn, x_pos, y_pos):
         """ Set the pawn in position x_pos, y_pos. """
-        # assert self.board[x_pos][y_pos] == ' '
         self.board[x_pos][y_pos] = pawn
 
     def get_secure_positions(self):
@@ -64,159 +64,26 @@ class Board(object):
 
     def calculate_threats(self):
         """ Add the threts to the board. """
-        for x_pos in range(0, self.sizeX):
-            for y_pos in range(0, self.sizeY):
-                if self.board[x_pos][y_pos] == 'K':
-                    self.calculate_threats_for_king(x_pos, y_pos)
-                elif self.board[x_pos][y_pos] == 'Q':
-                    self.calculate_threats_for_queen(x_pos, y_pos)
-                elif self.board[x_pos][y_pos] == 'B':
-                    self.calculate_threats_for_bishop(x_pos, y_pos)
-                elif self.board[x_pos][y_pos] == 'R':
-                    self.calculate_threats_for_rook(x_pos, y_pos)
-                elif self.board[x_pos][y_pos] == 'N':
-                    self.calculate_threats_for_knight(x_pos, y_pos)
-
-    def is_pawn_threats_others(self, piece, x_pos, y_pos):
-        """
-        Return True if the piece in x, y threats any one else.
-        """
-        if piece == 'K':
-            return self.check_threats_for_king(x_pos, y_pos)
-        elif piece == 'Q':
-            return self.check_threats_for_queen(x_pos, y_pos)
-        elif piece == 'B':
-            return self.check_threats_for_bishop(x_pos, y_pos)
-        elif piece == 'R':
-            return self.check_threats_for_rook(x_pos, y_pos)
-        elif piece == 'N':
-            return self.check_threats_for_knight(x_pos, y_pos)
-        assert True, "Unknown issue in is_pawn_threats_others"
-
-    def calculate_threats_for_king(self, x_pos, y_pos):
-        """ Add the threads to the board for the king. """
-        for i in [-1, 0, 1]:
-            if x_pos + i >= 0 and x_pos + i < self.sizeX:
-                for j in [-1, 0, 1]:
-                    if y_pos + j >= 0 and y_pos + j < self.sizeY:
-                        self.set_position_as_thread(x_pos + i, y_pos + j)
-
-    def calculate_threats_for_rook(self, x, y):
-        """ Add the threads to the board. """
-        for i in range(0, self.sizeX):
-            # print("i: " + str(i))
-            if self.board[i][y] == ' ':
-                self.set_position_as_thread(i, y)
-
-        for j in range(0, self.sizeY):
-            # print("j: " + str(j))
-            if self.board[x][j] == ' ':
-                self.set_position_as_thread(x, j)
-        return
-
-    def calculate_threats_for_queen(self, x, y):
-        """ Add the threads to the board for the queen. """
-        self.calculate_threats_for_bishop(x, y)
-        self.calculate_threats_for_rook(x, y)
-        return
-
-    def calculate_threats_for_bishop(self, x_pos, y_pos):
-        """ Add the threads to the board for the bishop. """
-        dx_threats = [-1, -1, 1, 1]
-        dy_threats = [-1, 1, -1, 1]
-        b_threats = zip(dx_threats, dy_threats)
-        for b_t in b_threats:
-            for step in range(1, self.sizeX):
-                p_x = x_pos + b_t[0] * step
-                p_y = y_pos + b_t[1] * step
-                if p_x >= 0 and p_x < self.sizeX and p_y >= 0 and p_y < self.sizeY:
-                    self.set_position_as_thread(p_x, p_y)
-        return
-
-    def calculate_threats_for_knight(self, x_pos, y_pos):
-        """ Add the threads to the board for the knight. """
-        dx = [-2, -2, -1, 1, 2, 2, 1, -1]
-        dy = [-1, 1, 2, 2, -1, 1, -2, -2]
-        k_threats = zip(dx, dy)
-        for t_pos in k_threats:
-            t_x, t_y = t_pos
-            px = x_pos + t_x
-            py = y_pos + t_y
-            if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
-                self.set_position_as_thread(px, py)
-        return
-
-    def check_threats_for_king(self, x_pos, y_pos):
-        """ Return true if threat other pieces. """
-        for i in [-1, 0, 1]:
-            if x_pos + i >= 0 and x_pos + i < self.sizeX:
-                for j in [-1, 0, 1]:
-                    if y_pos + j >= 0 and y_pos + j < self.sizeY:
-                        content = self.board[x_pos + i][y_pos + j]
-                        if content != ' ' and content != THREAT:
-                            return True
-        return False
-
-    def check_threats_for_rook(self, x_pos, y_pos):
-        """ Return true if threat other pieces. """
-        for i in range(0, self.sizeX):
-            if self.board[i][y_pos] != ' ' and self.board[i][y_pos] != THREAT:
-                return True
-
-        for j in range(0, self.sizeY):
-            if self.board[x_pos][j] != ' ' and self.board[x_pos][j] != THREAT:
-                return True
-        return False
-
-    def check_threats_for_queen(self, x_pos, y_pos):
-        """ Return true if threat other pieces. """
-        return self.check_threats_for_rook(
-            x_pos, y_pos) or self.check_threats_for_bishop(
-            x_pos, y_pos)
-
-    def check_threats_for_bishop(self, x_pos, y_pos):
-        """ Return true if threat other pieces. """
-        dx_threats = [-1, -1, 1, 1]
-        dy_threats = [-1, 1, -1, 1]
-        b_threats = zip(dx_threats, dy_threats)
-        for bt in b_threats:
-            for step in range(1, self.sizeX):
-                px = x_pos + bt[0] * step
-                py = y_pos + bt[1] * step
-                if px >= 0 and px < self.sizeX and py >= 0 and py < self.sizeY:
-                    if self.board[px][py] != ' ' and self.board[
-                            px][py] != THREAT:
-                        return True
-        return False
-
-    def check_threats_for_knight(self, x_pos, y_pos):
-        """ Return true if threat other pieces. """
-        dx_threats = [-2, -2, -1, 1, 2, 2, 1, -1]
-        dy_threats = [-1, 1, 2, 2, -1, 1, -2, -2]
-        k_threats = zip(dx_threats, dy_threats)
-        for t_pos in k_threats:
-            t_x, t_y = t_pos
-            p_x = x_pos + t_x
-            p_y = y_pos + t_y
-            if p_x >= 0 and p_x < self.sizeX and p_y >= 0 and p_y < self.sizeY:
-                if self.board[p_x][p_y] != ' ' and self.board[
-                        p_x][p_y] != THREAT:
-                    return True
-        return False
+        for x_pos in range(0, self.size):
+            for y_pos in range(0, self.size):
+                    if self.board[x_pos][y_pos] != ' ':
+                        if self.board[x_pos][y_pos] != THREAT:
+                            self.board[x_pos][y_pos].calculate_threats(
+                                self, x_pos, y_pos)
 
     def rotated_boards(self):
         """ Return the rotated and symmetry boards. """
         def transform_to_list(board):
             """ Get a board and change tuples to lists. """
             itr = 0
-            for b in board:
-                board[itr] = list(b)
+            for row in board:
+                board[itr] = list(row)
                 itr += 1
             return board
         # rotated boards
-        new_board90 = Board(self.sizeX, self.sizeY)
-        new_board180 = Board(self.sizeX, self.sizeY)
-        new_board260 = Board(self.sizeX, self.sizeY)
+        new_board90 = Board(self.size)
+        new_board180 = Board(self.size)
+        new_board260 = Board(self.size)
 
         new_board90.change_board(transform_to_list(
             zip(*self.board[::-1])))  # rotate
@@ -226,16 +93,3 @@ class Board(object):
             transform_to_list(zip(*new_board180.board[::-1])))
 
         return [new_board90, new_board180, new_board260]
-
-
-    def get_pieces_and_positions(self):
-        """ Return a list with the pieces and its positions. """
-        pieces = []
-        for i in range(self.sizeX):
-            for j in range(self.sizeY):
-                piece = self.board[i][j]
-                if piece == ' ' or piece == 'T':
-                    continue
-                a_piece = {'p': piece, 'x': i, 'y': j}
-                pieces.append(a_piece)
-        return pieces
