@@ -7,7 +7,11 @@ class Board(object):
     """ The board of chess and the logic of threating pieces. """
 
     def __init__(self, size, data=None):
-        """ Initiaze the board. """
+        """ Initiaze the board. 
+
+        Raises:
+            TypeError: if data has different length from size.
+        """
         if data is None:
             self.board = [[" " for _ in range(size)] for _ in range(size)]
         else:
@@ -45,7 +49,11 @@ class Board(object):
         self.board = data
 
     def get_pawn_from(self, x_pos, y_pos):
-        """ Return the pawn in position x_pos, y_pos or None. """
+        """ Return the pawn in position x_pos, y_pos or None.
+
+        Raises:
+            IndexError: if x_pos or y_pos are not in size range.
+        """
         if x_pos > self.size or y_pos > self.size:
             raise IndexError('potition is out of board size')
         return self.board[x_pos][y_pos]
@@ -63,7 +71,11 @@ class Board(object):
                 for iy, i in enumerate(row) if i == ' ']
 
     def set_position_as_thread(self, x_pos, y_pos):
-        """ Set the position x_pos, y_pos as thread. """
+        """ Set the position x_pos, y_pos as thread.
+
+        Raises:
+            IndexError: if x_pos or y_pos are not in size range.
+        """
         if x_pos > self.size or y_pos > self.size:
             raise IndexError('potition is out of board size')
         if self.board[x_pos][y_pos] == ' ':
@@ -79,7 +91,7 @@ class Board(object):
                                 self, x_pos, y_pos)
 
     def rotated_boards(self):
-        """ Return the rotated and symmetry boards. """
+        """ Return the rotated boards. """
         def transform_to_list(board):
             """ Get a board and change tuples to lists. """
             itr = 0

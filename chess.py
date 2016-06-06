@@ -51,7 +51,15 @@ def main():
 
 
 def find_solutions(board, pieces, solutions):
-    """ Find the solution'boards. """
+    """ Find the solutions for the given board and pieces.
+
+    Iterates though the pieces and checks all secure positions.
+    If the piece in the secure position threat other pieces, it
+    removes it from the solution and continue to the next position.
+    When all the pieces are placed in the board, the board is an accepted
+    solution. It rotates this solution board by 90, 180 and 260 degrees
+    and adds those rotated boards to the accepted solutions.
+    """
     if len(pieces) == 0:
         if board not in solutions:
             solutions.append(board)
@@ -86,7 +94,11 @@ def find_solutions(board, pieces, solutions):
     return
 
 def is_already_tried(board, solutions):
-    """ Check in the solutions if this solution is tried and accepted. """
+    """ Check in the solutions if this solution is tried and accepted.
+
+    Checks if the pieces in board is already in a solution board. A
+    solution board may have more pieces.
+    """
     current_pieces = board.get_pieces_and_positions()
 
     for sol in solutions:

@@ -34,7 +34,15 @@ class King(Pawn):
     """ The class with all the logic for King. """
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
-        """ Add the threads to the board for the king. """
+        """ Add the threads to the board for the king.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of King.
+            x_pos: the column position of King.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         for i in [-1, 0, 1]:
@@ -46,7 +54,17 @@ class King(Pawn):
 
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
-        """ Return true if threat other pieces. """
+        """ Return true if threat other pieces.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Rook.
+            x_pos: the column position of Rook.
+        Returns:
+            True if the Rook threats other pieces.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         for i in [-1, 0, 1]:
@@ -75,13 +93,34 @@ class Queen(Pawn):
     """ The class with all the logic for Queen. """
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
+        """ Add the threats to the board for the Queen.
+
+        The Queen threats are a combination of Bishop and
+        Rook threats.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Queen.
+            x_pos: the column position of Queen.
+        """
         Bishop.calculate_threats(board, x_pos, y_pos)
         Rook.calculate_threats(board, x_pos, y_pos)
         return
 
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
-        """ Return true if threat other pieces. """
+        """ Return true if threat other pieces.
+
+        The Queen threats are a combination of Bishop and
+        Rook threats.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Queen.
+            x_pos: the column position of Queen.
+        Returns:
+            True if the Queen threats other pieces.
+        """
         return Rook.check_threats(
             board, x_pos, y_pos) or Bishop.check_threats(
             board, x_pos, y_pos)
@@ -103,7 +142,15 @@ class Bishop(Pawn):
     """ The class with all the logic for Bishop. """
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
-        """ Add the threads to the board for the bishop. """
+        """ Add the threads to the board for the bishop.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Bishop.
+            x_pos: the column position of Bishop.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         dx_threats = [-1, -1, 1, 1]
@@ -119,7 +166,17 @@ class Bishop(Pawn):
 
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
-        """ Return true if threat other pieces. """
+        """ Return true if threat other pieces.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Bishop.
+            x_pos: the column position of Bishop.
+        Returns:
+            True if the Bishop threats other pieces.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         dx_threats = [-1, -1, 1, 1]
@@ -152,7 +209,15 @@ class Knight(Pawn):
     """ The class with all the logic for Knight. """
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
-        """ Add the threads to the board for the knight. """
+        """ Add the threads to the board for the knight.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Knight.
+            x_pos: the column position of Knight.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         dx = [-2, -2, -1, 1, 2, 2, 1, -1]
@@ -167,7 +232,17 @@ class Knight(Pawn):
 
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
-        """ Return true if threat other pieces. """
+        """ Return true if threat other pieces.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Knight.
+            x_pos: the column position of Knight.
+        Returns:
+            True if the Knight threats other pieces.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         dx_threats = [-2, -2, -1, 1, 2, 2, 1, -1]
@@ -200,7 +275,15 @@ class Rook(Pawn):
     """ The class with all the logic for Rook. """
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
-        """ Add the threads to the board for the rook. """
+        """ Add the threads to the board for the Rook.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Rook.
+            x_pos: the column position of Rook.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         for i in range(0, board.size):
@@ -215,7 +298,17 @@ class Rook(Pawn):
 
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
-        """ Return true if threat other pieces. """
+        """ Return true if threat other pieces.
+
+        Args:
+            board: the chess board.
+            x_pos: the row position of Rook.
+            x_pos: the column position of Rook.
+        Returns:
+            True if the Rook threats other pieces.
+        Raises:
+            IndexError: If x_pos or y_pos are not valid.
+        """
         if x_pos > board.size or y_pos > board.size:
             raise IndexError('potition is out of board size')
         for i in range(0, board.size):
