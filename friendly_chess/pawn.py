@@ -35,6 +35,8 @@ class King(Pawn):
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
         """ Add the threads to the board for the king. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         for i in [-1, 0, 1]:
             if x_pos + i >= 0 and x_pos + i < board.size:
                 for j in [-1, 0, 1]:
@@ -45,6 +47,8 @@ class King(Pawn):
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
         """ Return true if threat other pieces. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         for i in [-1, 0, 1]:
             if x_pos + i >= 0 and x_pos + i < board.size:
                 for j in [-1, 0, 1]:
@@ -100,6 +104,8 @@ class Bishop(Pawn):
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
         """ Add the threads to the board for the bishop. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         dx_threats = [-1, -1, 1, 1]
         dy_threats = [-1, 1, -1, 1]
         b_threats = zip(dx_threats, dy_threats)
@@ -114,6 +120,8 @@ class Bishop(Pawn):
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
         """ Return true if threat other pieces. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         dx_threats = [-1, -1, 1, 1]
         dy_threats = [-1, 1, -1, 1]
         b_threats = zip(dx_threats, dy_threats)
@@ -145,6 +153,8 @@ class Knight(Pawn):
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
         """ Add the threads to the board for the knight. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         dx = [-2, -2, -1, 1, 2, 2, 1, -1]
         dy = [-1, 1, 2, 2, -1, 1, -2, -2]
         k_threats = zip(dx, dy)
@@ -158,6 +168,8 @@ class Knight(Pawn):
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
         """ Return true if threat other pieces. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         dx_threats = [-2, -2, -1, 1, 2, 2, 1, -1]
         dy_threats = [-1, 1, 2, 2, -1, 1, -2, -2]
         k_threats = zip(dx_threats, dy_threats)
@@ -189,6 +201,8 @@ class Rook(Pawn):
     @classmethod
     def calculate_threats(cls, board, x_pos, y_pos):
         """ Add the threads to the board for the rook. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         for i in range(0, board.size):
             # print("i: " + str(i))
             if board.board[i][y_pos] == ' ':
@@ -202,6 +216,8 @@ class Rook(Pawn):
     @classmethod
     def check_threats(cls, board, x_pos, y_pos):
         """ Return true if threat other pieces. """
+        if x_pos > board.size or y_pos > board.size:
+            raise IndexError('potition is out of board size')
         for i in range(0, board.size):
             if board.board[i][y_pos] != ' ' and board.board[
                     i][y_pos] != THREAT:

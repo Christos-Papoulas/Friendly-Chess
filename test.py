@@ -29,13 +29,22 @@ class find_solutions_tests(unittest.TestCase):
 
         chess.print_solutions(solutions)
 
-    def test_find_solutions_for4N2R(self):
+    def test_find_solutions_for4Queens(self):
         pieces = [Queen(), Queen(), Queen(), Queen()]
         board = Board(4)
         solutions = []
         self.assertRaises(Exception, chess.find_solutions(
             board, pieces, solutions))
         self.assertEqual(len(solutions), 2)
+        chess.print_solutions(solutions)
+
+    def test_find_solutions_for4N2R(self):
+        pieces = [Knight(), Knight(), Knight(), Knight(), Rook(), Rook()]
+        board = Board(4)
+        solutions = []
+        self.assertRaises(Exception, chess.find_solutions(
+            board, pieces, solutions))
+        self.assertEqual(len(solutions), 8)
         chess.print_solutions(solutions)
 
 class is_already_tried_test(unittest.TestCase):

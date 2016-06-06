@@ -1,7 +1,6 @@
 """ The board of chess. """
 
 THREAT = 'T'
-import pdb
 
 
 class Board(object):
@@ -12,6 +11,8 @@ class Board(object):
         if data is None:
             self.board = [[" " for _ in range(size)] for _ in range(size)]
         else:
+            if len(data) != size:
+                raise TypeError('board not match the board size')
             self.board = data
         self.size = size
 
@@ -45,10 +46,14 @@ class Board(object):
 
     def get_pawn_from(self, x_pos, y_pos):
         """ Return the pawn in position x_pos, y_pos or None. """
+        if x_pos > self.size or y_pos > self.size:
+            raise IndexError('potition is out of board size')
         return self.board[x_pos][y_pos]
 
     def set_pawn_in(self, pawn, x_pos, y_pos):
         """ Set the pawn in position x_pos, y_pos. """
+        if x_pos > self.size or y_pos > self.size:
+            raise IndexError('potition is out of board size')
         self.board[x_pos][y_pos] = pawn
 
     def get_secure_positions(self):
@@ -59,6 +64,8 @@ class Board(object):
 
     def set_position_as_thread(self, x_pos, y_pos):
         """ Set the position x_pos, y_pos as thread. """
+        if x_pos > self.size or y_pos > self.size:
+            raise IndexError('potition is out of board size')
         if self.board[x_pos][y_pos] == ' ':
             self.board[x_pos][y_pos] = THREAT
 
@@ -93,3 +100,15 @@ class Board(object):
             transform_to_list(zip(*new_board180.board[::-1])))
 
         return [new_board90, new_board180, new_board260]
+
+    def get_pieces_and_positions(self):
+        """ Return a list with the pieces and its positions. """
+        pieces = []
+        for i in range(self.size):
+            for j in range(self.size):
+                piece = self.board[i][j]
+                if piece == ' ' or piece == 'T':
+                    continue
+                a_piece = {'p': piece, 'x': i, 'y': j}
+                pieces.append(a_piece)
+        return pieces
